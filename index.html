@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</p>
+<p class="p1">&lt;title&gt;Causes of death by month, El Paso Sector&lt;/title&gt;</p>
+<p class="p1">&lt;script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--bg:#eef1f4; --panel:#ffffff; --ink:#1b2733; --muted:#5b6977; --grid:#dde3e8;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--bar:#4a6b85; --hi:#a1303f; --head:#17324a; --head-sub:#c3d2de; --line:#d3dbe2;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--c0:#a1303f; --c1:#4a6b85; --c2:#9aa7b1; --c3:#b7791f; --c4:#3f7f78; --c5:#cfd5db;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@media (prefers-color-scheme: dark) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--bg:#10161c; --panel:#1a232c; --ink:#e8ecef; --muted:#9aa8b3; --grid:#303d49;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--bar:#6f95b3; --hi:#e0707f; --head:#0b1219; --head-sub:#a9b9c6; --line:#2e3b47;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--c0:#e0707f; --c1:#6f95b3; --c2:#7b8a96; --c3:#e5a63f; --c4:#5bb3a8; --c5:#55636e;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>* { box-sizing: border-box; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>header { background:var(--head); color:#fff; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.head-in { max-width:1040px; margin:0 auto; padding:44px 24px 40px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>h1 { font:700 clamp(1.7rem,4vw,2.5rem)/1.15 Georgia,"Times New Roman",serif; margin:0 0 16px; max-width:24ch; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.rq { color:var(--head-sub); margin:0; max-width:72ch; font-size:1.05rem; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>main { max-width:1040px; margin:0 auto; padding:28px 24px 56px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.card { background:var(--panel); border:1px solid var(--line); border-radius:8px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.chart-card { padding:20px; margin-top:-56px; box-shadow:0 2px 10px rgba(0,0,0,.08); position:relative; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.chart-title { font:700 1.05rem system-ui,sans-serif; margin:0 0 2px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.chart-sub { font-size:.9rem; color:var(--muted); margin:0 0 14px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.legend { display:flex; flex-wrap:wrap; gap:6px 8px; margin-bottom:8px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.legend button { display:inline-flex; align-items:center; gap:7px; font:500 .83rem system-ui,sans-serif; color:var(--ink); background:var(--panel);</p>
+<p class="p1"><span class="Apple-converted-space">                   </span>border:1px solid var(--line); border-radius:999px; padding:4px 11px; cursor:pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.legend button[aria-pressed="false"] { opacity:.45; text-decoration:line-through; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sw { width:12px; height:12px; border-radius:3px; display:inline-block; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>button:focus-visible { outline:2px solid var(--bar); outline-offset:2px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart svg { display:block; width:100%; height:auto; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart .tick text { fill:var(--muted); font-size:12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart .tick line { stroke:var(--grid); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart .domain { stroke:var(--grid); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart .axis-title { fill:var(--muted); font-size:12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart .peak-label { fill:var(--ink); font-size:12.5px; font-weight:700; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart rect.seg-bar { stroke:var(--panel); stroke-width:1; cursor:pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#chart rect.seg-bar:hover { stroke:var(--ink); stroke-width:2; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tip { position:absolute; pointer-events:none; background:var(--ink); color:var(--panel); padding:8px 10px; border-radius:4px; font-size:13px; line-height:1.45; opacity:0; transition:opacity .1s; z-index:3; min-width:170px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tip b { display:block; font-size:14px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>h2 { font:700 1.35rem/1.2 Georgia,serif; margin:40px 0 16px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.insights { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.insight { padding:20px 22px 22px; border-top:4px solid var(--bar); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.insight.alert { border-top-color:var(--hi); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat { font:700 2rem/1.1 Georgia,serif; margin:0 0 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.insight.alert .stat { color:var(--hi); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.period { font-weight:600; font-size:.95rem; margin:0 0 8px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.insight p.body { margin:0; color:var(--muted); font-size:.95rem; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.notes { font-size:13.5px; color:var(--muted); max-width:80ch; border-top:1px solid var(--line); padding-top:16px; margin-top:40px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.notes p { margin:0 0 8px; }</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="head-in"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Heat drives a summer peak in recorded deaths&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="rq"&gt;What are the leading causes of death among recorded migrants in the El Paso Sector, and how do they change across the year, so prevention can reach people at the right time?&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;main&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;section class="card chart-card" id="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="chart-title"&gt;Recorded deaths by month and cause&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="chart-sub" id="csub"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="legend" id="legend" role="group" aria-label="Show or hide causes"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="chart"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="tip" id="tip" role="status"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Trend insights&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="insights"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;article class="card insight alert"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="stat"&gt;3.7&amp;times;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="period"&gt;May is the early warning&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="body"&gt;Environmental exposure deaths jump from 7 cases in April to 26 in May, a month before the peak. Outreach that starts in May reaches people before the deadliest months.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/article&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;article class="card insight"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="stat"&gt;70%&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="period"&gt;Heat drives the peak&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="body"&gt;70% of environmental exposure deaths fall in June to August, peaking in July with 98 cases. Summer prevention messaging should lead with heat.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/article&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;article class="card insight"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="stat"&gt;63%&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="period"&gt;Water risks peak in summer too&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="body"&gt;63% of water-related deaths also occur from June to August, with 39 cases in June alone, so water safety belongs in the same summer outreach.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/article&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="notes"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;b&gt;About the data.&lt;/b&gt; El Paso Sector Migrant Deaths dataset (UNM Office of the Medical Investigator and partner sources). Of 709 recorded cases from 2008 to 2024, 706 have a recorded month and are shown. Causes use the dataset's incident-type field, with duplicate labels merged.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;&lt;b&gt;Limits.&lt;/b&gt; Counts combine all years, so they show the typical seasonal pattern and not any single year. Recorded deaths only; remains never found are not counted.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">// Cases per cause (rows) by month, Jan to Dec (columns). Used right away,</p>
+<p class="p1">// then replaced by numbers counted from the CSV if the file can be loaded.</p>
+<p class="p1">var EMBEDDED = [[4,4,6,7,26,85,98,48,22,20,5,5],[0,1,11,8,3,39,18,15,13,4,2,1],[6,6,4,4,4,6,8,12,11,13,14,6],[6,3,4,9,2,8,8,4,4,5,10,5],[1,1,6,2,4,4,1,2,2,2,6,3],[2,3,4,3,3,14,8,14,2,7,2,3]];</p>
+<p class="p2"><br></p>
+<p class="p1">var CAUSES = ['Environmental exposure', 'Water-related', 'Skeletal remains', 'Motor vehicle', 'Fall', 'Other or unknown'];</p>
+<p class="p1">var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];</p>
+<p class="p1">var MONTH_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];</p>
+<p class="p1">var CSV_URLS = [</p>
+<p class="p1"><span class="Apple-converted-space">  </span>'deaths.csv',</p>
+<p class="p1"><span class="Apple-converted-space">  </span>encodeURI('https://sandboxtutor.biz/udata/XG68El Paso Sector Migrant Deaths 2008-2023 - Sheet1.csv'),</p>
+<p class="p1"><span class="Apple-converted-space">  </span>encodeURI('https://sandboxtutor.biz/udata/XG68/El Paso Sector Migrant Deaths 2008-2023 - Sheet1.csv')</p>
+<p class="p1">];</p>
+<p class="p2"><br></p>
+<p class="p1">/* ---------- CSV loading ---------- */</p>
+<p class="p1">function parseCSV(text) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var rows = [], row = [], f = '', q = false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for (var i = 0; i &lt; text.length; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var c = text[i];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (q) { if (c === '"' &amp;&amp; text[i+1] === '"') { f += '"'; i++; } else if (c === '"') q = false; else f += c; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if (c === '"') q = true;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if (c === ',') { row.push(f); f = ''; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if (c === '\n' || c === '\r') { if (c === '\r' &amp;&amp; text[i+1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else f += c;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (f || row.length) { row.push(f); rows.push(row); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return rows;</p>
+<p class="p1">}</p>
+<p class="p1">function norm(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/-/g, ' ').trim(); }</p>
+<p class="p1">var CA = { 'environmental exposure': 0, 'water related': 1, 'skeletal': 2, 'motor vehicle related': 3, 'fall': 4 };</p>
+<p class="p2"><br></p>
+<p class="p1">function toData(text) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var rows = parseCSV(text.trim()), h = rows[0].map(function (s) { return s.trim(); }), ix = {};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>['Case Number','Year','Month','Type of Incident'].forEach(function (k) { ix[k] = h.indexOf(k); if (ix[k] &lt; 0) throw new Error('Missing column ' + k); });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var month = d3.range(6).map(function () { return d3.range(12).map(function () { return 0; }); }), n = 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows.slice(1).forEach(function (r) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var y = parseInt(r[ix['Year']], 10);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (!r[ix['Case Number']] || !r[ix['Case Number']].trim() || isNaN(y) || y &lt; 2008 || y &gt; 2024) return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var ca = CA[norm(r[ix['Type of Incident']])]; if (ca === undefined) ca = 5;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var mo = MONTH_FULL.indexOf(String(r[ix['Month']] || '').trim().replace(/^./, function (c) { return c.toUpperCase(); }));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (mo &gt;= 0) { month[ca][mo]++; n++; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (n &lt; 100) throw new Error('Too few rows');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return month;</p>
+<p class="p1">}</p>
+<p class="p1">function loadData(i) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (i &gt;= CSV_URLS.length) return Promise.reject(new Error('No CSV link worked'));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return fetch(CSV_URLS[i]).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(toData)</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.catch(function () { return loadData(i + 1); });</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ---------- Legend (click a cause to hide or show it) ---------- */</p>
+<p class="p1">var data = EMBEDDED, off = {};</p>
+<p class="p1">var tip = d3.select('#tip'), wrap = document.getElementById('wrap');</p>
+<p class="p1">CAUSES.forEach(function (label, k) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>d3.select('#legend').append('button').attr('type', 'button').attr('aria-pressed', 'true')</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.html('&lt;i class="sw" style="background:var(--c' + k + ')"&gt;&lt;/i&gt;' + label)</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.on('click', function () { off[k] = !off[k]; this.setAttribute('aria-pressed', off[k] ? 'false' : 'true'); render(); });</p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">/* ---------- Chart ---------- */</p>
+<p class="p1">function render() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var host = d3.select('#chart'); host.selectAll('*').remove(); tip.style('opacity', 0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var W = Math.max(300, document.getElementById('chart').clientWidth), H = W &lt; 560 ? 380 : 460;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var m = { t: 30, r: 12, b: 52, l: W &lt; 560 ? 44 : 56 }, iw = W - m.l - m.r, ih = H - m.t - m.b;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var allKeys = d3.range(6).map(function (k) { return 'c' + k; });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var keys = allKeys.filter(function (k, i) { return !off[i]; });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var rows = MONTHS.map(function (name, i) { var o = { cat: name }; allKeys.forEach(function (k, c) { o[k] = data[c][i]; }); return o; });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>var tot = d3.sum(data, function (a) { return d3.sum(a); }), jja = d3.sum(data, function (a) { return a[5] + a[6] + a[7]; });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>d3.select('#csub').text(tot + ' cases with a recorded month, 2008 to 2024');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>var svg = host.append('svg').attr('viewBox', '0 0 ' + W + ' ' + H).attr('role', 'img')</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.attr('aria-label', 'Stacked bar chart of recorded deaths by month and cause. June to August is the peak.');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var g = svg.append('g').attr('transform', 'translate(' + m.l + ',' + m.t + ')');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>var x = d3.scaleBand().domain(MONTHS).range([0, iw]).padding(.22);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var series = d3.stack().keys(keys)(rows);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var ymax = d3.max(rows, function (r) { return d3.sum(keys, function (k) { return r[k]; }); }) || 1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var y = d3.scaleLinear().domain([0, ymax]).nice().range([ih, 0]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Peak-season band (June to August), drawn first so it sits behind everything</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var bx = x('Jun') - (x.step() - x.bandwidth()) / 2, bw = x.step() * 3;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>g.append('rect').attr('x', bx).attr('y', 0).attr('width', bw).attr('height', ih).style('fill', 'var(--ink)').style('opacity', .06);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>g.append('text').attr('class', 'peak-label').attr('x', bx + bw / 2).attr('y', -10).attr('text-anchor', 'middle')</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.text('June to August: ' + Math.round(jja / tot * 100) + '% of cases');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-iw).tickFormat(d3.format('d')))</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.call(function (a) { a.select('.domain').remove(); });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>g.append('g').attr('transform', 'translate(0,' + ih + ')').call(d3.axisBottom(x).tickSizeOuter(0));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>svg.append('text').attr('class', 'axis-title').attr('x', m.l + iw / 2).attr('y', H - 8).attr('text-anchor', 'middle').text('Month');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>svg.append('text').attr('class', 'axis-title').attr('transform', 'translate(14,' + (m.t + ih / 2) + ') rotate(-90)').attr('text-anchor', 'middle').text('Recorded deaths');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!keys.length) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>g.append('text').attr('x', iw / 2).attr('y', ih / 2).attr('text-anchor', 'middle').style('fill', 'var(--muted)').text('Select at least one cause in the legend.');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>g.append('g').selectAll('g').data(series).join('g').style('fill', function (s) { return 'var(--' + s.key + ')'; })</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.selectAll('rect').data(function (s) { return s.map(function (d) { d.key = s.key; return d; }); }).join('rect')</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.attr('class', 'seg-bar').attr('x', function (d) { return x(d.data.cat); }).attr('width', x.bandwidth())</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.attr('y', ih).attr('height', 0)</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.on('mouseenter mousemove', function (ev, d) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var k = +d.key.slice(1), count = d.data[d.key], total = d3.sum(allKeys, function (kk) { return d.data[kk]; });</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var box = wrap.getBoundingClientRect(), left = ev.clientX - box.left + 14, top = ev.clientY - box.top - 70;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>tip.html('&lt;b&gt;' + CAUSES[k] + '&lt;/b&gt;' + d.data.cat + ': ' + count + ' case' + (count === 1 ? '' : 's') + '&lt;br&gt;' + (total ? Math.round(count / total * 100) : 0) + '% of cases in this month')</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.style('left', Math.min(left, box.width - 200) + 'px').style('top', Math.max(top, 8) + 'px').style('opacity', 1);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>})</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.on('mouseleave', function () { tip.style('opacity', 0); })</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.transition().duration(550)</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.attr('y', function (d) { return y(d[1]); }).attr('height', function (d) { return Math.max(0, y(d[0]) - y(d[1])); });</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">render();</p>
+<p class="p1">loadData(0).then(function (d) { data = d; render(); }).catch(function (e) { console.warn('Could not load the CSV. Using the built-in counts.', e); });</p>
+<p class="p1">var rz; window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(render, 150); });</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
